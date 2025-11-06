@@ -500,7 +500,7 @@ export default function App() {
         JSON.stringify(recentHistoricalData)
       );
     }
-  }, []);
+  }, [recentHistoricalData]);
 
   // Save to localStorage whenever entries change
   useEffect(() => {
