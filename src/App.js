@@ -510,6 +510,7 @@ export default function App() {
   ];
 
   // Load data from localStorage on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const saved = localStorage.getItem("ticTrackerData");
     if (saved) {
