@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Calendar,
   Plus,
@@ -52,262 +52,284 @@ export default function App() {
   const [expandedEntries, setExpandedEntries] = useState(new Set());
 
   // Historical data from May 2025 onwards (when severe vocal tics started)
-  const recentHistoricalData = [
-    {
-      id: "hist-may-2025",
-      date: "2025-05-15",
-      medication: {
-        dose: "3",
-        timeTaken: "08:00",
-        notes: "Just restarted after stopping in February",
+  const recentHistoricalData = useMemo(
+    () => [
+      {
+        id: "hist-may-2025",
+        date: "2025-05-15",
+        medication: {
+          dose: "3",
+          timeTaken: "08:00",
+          notes: "Just restarted after stopping in February",
+        },
+        nausea: {
+          morning: 8,
+          afternoon: 7,
+          evening: 8,
+          notes: "Daily nausea, very bad",
+        },
+        lightheadedness: {
+          episodes: 5,
+          severity: 7,
+          triggers: "Standing up, random",
+        },
+        headache: {
+          severity: 7,
+          location: "all over",
+          type: "pressure",
+          notes: "Daily",
+        },
+        eyePressure: {
+          severity: 6,
+          constant: true,
+          notes: "Started noticing this more",
+        },
+        tics: {
+          vocalSeverity: 9,
+          motorSeverity: 8,
+          injuries: true,
+          injuryDetails:
+            "THE STORM - could barely walk, breathing issues, body twisting",
+          suppressionLevel: 8,
+          rebound: true,
+        },
+        pain: { throat: 9, jaw: 7, muscle: 8, stomach: 7 },
+        school: {
+          attended: false,
+          suppressionLevel: 0,
+          reboundSeverity: 10,
+          notes: "Too severe to attend",
+        },
+        mood: { overall: 3, energy: 2, anxiety: 9, irritability: 8 },
+        notes:
+          "SEVERE EXPLOSION after stopping medication - this is when we realized how much aripiprazole was helping",
       },
-      nausea: {
-        morning: 8,
-        afternoon: 7,
-        evening: 8,
-        notes: "Daily nausea, very bad",
+      {
+        id: "hist-june-2025",
+        date: "2025-06-15",
+        medication: {
+          dose: "3",
+          timeTaken: "08:00",
+          notes: "Back on medication, slight improvement",
+        },
+        nausea: { morning: 7, afternoon: 6, evening: 7, notes: "Still daily" },
+        lightheadedness: {
+          episodes: 4,
+          severity: 6,
+          triggers: "Throughout day",
+        },
+        headache: {
+          severity: 6,
+          location: "temples",
+          type: "tension",
+          notes: "Daily headaches",
+        },
+        eyePressure: {
+          severity: 6,
+          constant: true,
+          notes: "Constant pressure feeling",
+        },
+        tics: {
+          vocalSeverity: 9,
+          motorSeverity: 7,
+          injuries: true,
+          injuryDetails: "Vocal tics 85+ decibels, nose swelling and bruising",
+          suppressionLevel: 7,
+          rebound: true,
+        },
+        pain: { throat: 8, jaw: 7, muscle: 7, stomach: 6 },
+        school: {
+          attended: true,
+          suppressionLevel: 8,
+          reboundSeverity: 9,
+          notes: "Suppressing all day, severe rebound at home",
+        },
+        mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
+        notes:
+          "Severe vocal tics started - 85+ decibels measured, family wearing earplugs constantly",
       },
-      lightheadedness: {
-        episodes: 5,
-        severity: 7,
-        triggers: "Standing up, random",
+      {
+        id: "hist-july-2025",
+        date: "2025-07-15",
+        medication: {
+          dose: "3",
+          timeTaken: "08:00",
+          notes: "No change in vocal tics",
+        },
+        nausea: {
+          morning: 7,
+          afternoon: 6,
+          evening: 7,
+          notes: "Still every day",
+        },
+        lightheadedness: {
+          episodes: 4,
+          severity: 6,
+          triggers: "Random throughout day",
+        },
+        headache: {
+          severity: 7,
+          location: "temples, forehead",
+          type: "pressure",
+          notes: "Getting worse",
+        },
+        eyePressure: { severity: 7, constant: true, notes: "More noticeable" },
+        tics: {
+          vocalSeverity: 9,
+          motorSeverity: 7,
+          injuries: true,
+          injuryDetails:
+            "Nose bruising, self-hitting, chipped tooth from jaw clenching",
+          suppressionLevel: 7,
+          rebound: true,
+        },
+        pain: { throat: 8, jaw: 7, muscle: 7, stomach: 6 },
+        school: {
+          attended: true,
+          suppressionLevel: 8,
+          reboundSeverity: 9,
+          notes: "Exhausted from suppression",
+        },
+        mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
+        notes: "Chipped tooth from tics, chronic sore throat from vocal tics",
       },
-      headache: {
-        severity: 7,
-        location: "all over",
-        type: "pressure",
-        notes: "Daily",
+      {
+        id: "hist-aug-2025",
+        date: "2025-08-15",
+        medication: {
+          dose: "3",
+          timeTaken: "08:00",
+          notes: "Plateaued - not helping enough",
+        },
+        nausea: {
+          morning: 7,
+          afternoon: 7,
+          evening: 8,
+          notes: "Daily, sometimes worse",
+        },
+        lightheadedness: {
+          episodes: 5,
+          severity: 6,
+          triggers: "Getting worse",
+        },
+        headache: {
+          severity: 7,
+          location: "all over",
+          type: "pressure",
+          notes: "Daily",
+        },
+        eyePressure: {
+          severity: 7,
+          constant: true,
+          notes: "Constant pressure",
+        },
+        tics: {
+          vocalSeverity: 9,
+          motorSeverity: 7,
+          injuries: true,
+          injuryDetails: "Ongoing nose injuries, facial bruising",
+          suppressionLevel: 7,
+          rebound: true,
+        },
+        pain: { throat: 8, jaw: 7, muscle: 7, stomach: 7 },
+        school: {
+          attended: true,
+          suppressionLevel: 8,
+          reboundSeverity: 9,
+          notes: "Very difficult to manage",
+        },
+        mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
+        notes: "No improvement in vocal tics despite being on medication",
       },
-      eyePressure: {
-        severity: 6,
-        constant: true,
-        notes: "Started noticing this more",
+      {
+        id: "hist-sept-2025",
+        date: "2025-09-15",
+        medication: {
+          dose: "3",
+          timeTaken: "08:00",
+          notes: "Discussing increase with doctor",
+        },
+        nausea: {
+          morning: 7,
+          afternoon: 7,
+          evening: 7,
+          notes: "Constant daily nausea",
+        },
+        lightheadedness: {
+          episodes: 5,
+          severity: 7,
+          triggers: "Throughout day",
+        },
+        headache: {
+          severity: 7,
+          location: "temples, back of head",
+          type: "pressure",
+          notes: "Daily",
+        },
+        eyePressure: { severity: 7, constant: true, notes: "Very noticeable" },
+        tics: {
+          vocalSeverity: 9,
+          motorSeverity: 7,
+          injuries: true,
+          injuryDetails: "Continuous injuries, ringing in ears from volume",
+          suppressionLevel: 7,
+          rebound: true,
+        },
+        pain: { throat: 8, jaw: 7, muscle: 7, stomach: 7 },
+        school: {
+          attended: true,
+          suppressionLevel: 8,
+          reboundSeverity: 9,
+          notes: "Struggling",
+        },
+        mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
+        notes:
+          "Tics causing ringing in ears from volume, family still wearing earplugs",
       },
-      tics: {
-        vocalSeverity: 9,
-        motorSeverity: 8,
-        injuries: true,
-        injuryDetails:
-          "THE STORM - could barely walk, breathing issues, body twisting",
-        suppressionLevel: 8,
-        rebound: true,
+      {
+        id: "hist-oct-2025",
+        date: "2025-10-15",
+        medication: {
+          dose: "4",
+          timeTaken: "08:00",
+          notes: "Increased to 4mg",
+        },
+        nausea: {
+          morning: 7,
+          afternoon: 7,
+          evening: 7,
+          notes: "No change with higher dose",
+        },
+        lightheadedness: { episodes: 5, severity: 7, triggers: "Ongoing" },
+        headache: {
+          severity: 7,
+          location: "temples",
+          type: "pressure",
+          notes: "Daily",
+        },
+        eyePressure: { severity: 7, constant: true, notes: "Ongoing" },
+        tics: {
+          vocalSeverity: 9,
+          motorSeverity: 7,
+          injuries: true,
+          injuryDetails: "Nose swelling, bruising ongoing",
+          suppressionLevel: 7,
+          rebound: true,
+        },
+        pain: { throat: 8, jaw: 7, muscle: 7, stomach: 7 },
+        school: {
+          attended: true,
+          suppressionLevel: 8,
+          reboundSeverity: 9,
+          notes: "Still very difficult",
+        },
+        mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
+        notes:
+          "Increased medication to 4mg, waiting to see if helps. Botox referral being discussed.",
       },
-      pain: { throat: 9, jaw: 7, muscle: 8, stomach: 7 },
-      school: {
-        attended: false,
-        suppressionLevel: 0,
-        reboundSeverity: 10,
-        notes: "Too severe to attend",
-      },
-      mood: { overall: 3, energy: 2, anxiety: 9, irritability: 8 },
-      notes:
-        "SEVERE EXPLOSION after stopping medication - this is when we realized how much aripiprazole was helping",
-    },
-    {
-      id: "hist-june-2025",
-      date: "2025-06-15",
-      medication: {
-        dose: "3",
-        timeTaken: "08:00",
-        notes: "Back on medication, slight improvement",
-      },
-      nausea: { morning: 7, afternoon: 6, evening: 7, notes: "Still daily" },
-      lightheadedness: { episodes: 4, severity: 6, triggers: "Throughout day" },
-      headache: {
-        severity: 6,
-        location: "temples",
-        type: "tension",
-        notes: "Daily headaches",
-      },
-      eyePressure: {
-        severity: 6,
-        constant: true,
-        notes: "Constant pressure feeling",
-      },
-      tics: {
-        vocalSeverity: 9,
-        motorSeverity: 7,
-        injuries: true,
-        injuryDetails: "Vocal tics 85+ decibels, nose swelling and bruising",
-        suppressionLevel: 7,
-        rebound: true,
-      },
-      pain: { throat: 8, jaw: 7, muscle: 7, stomach: 6 },
-      school: {
-        attended: true,
-        suppressionLevel: 8,
-        reboundSeverity: 9,
-        notes: "Suppressing all day, severe rebound at home",
-      },
-      mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
-      notes:
-        "Severe vocal tics started - 85+ decibels measured, family wearing earplugs constantly",
-    },
-    {
-      id: "hist-july-2025",
-      date: "2025-07-15",
-      medication: {
-        dose: "3",
-        timeTaken: "08:00",
-        notes: "No change in vocal tics",
-      },
-      nausea: {
-        morning: 7,
-        afternoon: 6,
-        evening: 7,
-        notes: "Still every day",
-      },
-      lightheadedness: {
-        episodes: 4,
-        severity: 6,
-        triggers: "Random throughout day",
-      },
-      headache: {
-        severity: 7,
-        location: "temples, forehead",
-        type: "pressure",
-        notes: "Getting worse",
-      },
-      eyePressure: { severity: 7, constant: true, notes: "More noticeable" },
-      tics: {
-        vocalSeverity: 9,
-        motorSeverity: 7,
-        injuries: true,
-        injuryDetails:
-          "Nose bruising, self-hitting, chipped tooth from jaw clenching",
-        suppressionLevel: 7,
-        rebound: true,
-      },
-      pain: { throat: 8, jaw: 7, muscle: 7, stomach: 6 },
-      school: {
-        attended: true,
-        suppressionLevel: 8,
-        reboundSeverity: 9,
-        notes: "Exhausted from suppression",
-      },
-      mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
-      notes: "Chipped tooth from tics, chronic sore throat from vocal tics",
-    },
-    {
-      id: "hist-aug-2025",
-      date: "2025-08-15",
-      medication: {
-        dose: "3",
-        timeTaken: "08:00",
-        notes: "Plateaued - not helping enough",
-      },
-      nausea: {
-        morning: 7,
-        afternoon: 7,
-        evening: 8,
-        notes: "Daily, sometimes worse",
-      },
-      lightheadedness: { episodes: 5, severity: 6, triggers: "Getting worse" },
-      headache: {
-        severity: 7,
-        location: "all over",
-        type: "pressure",
-        notes: "Daily",
-      },
-      eyePressure: { severity: 7, constant: true, notes: "Constant pressure" },
-      tics: {
-        vocalSeverity: 9,
-        motorSeverity: 7,
-        injuries: true,
-        injuryDetails: "Ongoing nose injuries, facial bruising",
-        suppressionLevel: 7,
-        rebound: true,
-      },
-      pain: { throat: 8, jaw: 7, muscle: 7, stomach: 7 },
-      school: {
-        attended: true,
-        suppressionLevel: 8,
-        reboundSeverity: 9,
-        notes: "Very difficult to manage",
-      },
-      mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
-      notes: "No improvement in vocal tics despite being on medication",
-    },
-    {
-      id: "hist-sept-2025",
-      date: "2025-09-15",
-      medication: {
-        dose: "3",
-        timeTaken: "08:00",
-        notes: "Discussing increase with doctor",
-      },
-      nausea: {
-        morning: 7,
-        afternoon: 7,
-        evening: 7,
-        notes: "Constant daily nausea",
-      },
-      lightheadedness: { episodes: 5, severity: 7, triggers: "Throughout day" },
-      headache: {
-        severity: 7,
-        location: "temples, back of head",
-        type: "pressure",
-        notes: "Daily",
-      },
-      eyePressure: { severity: 7, constant: true, notes: "Very noticeable" },
-      tics: {
-        vocalSeverity: 9,
-        motorSeverity: 7,
-        injuries: true,
-        injuryDetails: "Continuous injuries, ringing in ears from volume",
-        suppressionLevel: 7,
-        rebound: true,
-      },
-      pain: { throat: 8, jaw: 7, muscle: 7, stomach: 7 },
-      school: {
-        attended: true,
-        suppressionLevel: 8,
-        reboundSeverity: 9,
-        notes: "Struggling",
-      },
-      mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
-      notes:
-        "Tics causing ringing in ears from volume, family still wearing earplugs",
-    },
-    {
-      id: "hist-oct-2025",
-      date: "2025-10-15",
-      medication: { dose: "4", timeTaken: "08:00", notes: "Increased to 4mg" },
-      nausea: {
-        morning: 7,
-        afternoon: 7,
-        evening: 7,
-        notes: "No change with higher dose",
-      },
-      lightheadedness: { episodes: 5, severity: 7, triggers: "Ongoing" },
-      headache: {
-        severity: 7,
-        location: "temples",
-        type: "pressure",
-        notes: "Daily",
-      },
-      eyePressure: { severity: 7, constant: true, notes: "Ongoing" },
-      tics: {
-        vocalSeverity: 9,
-        motorSeverity: 7,
-        injuries: true,
-        injuryDetails: "Nose swelling, bruising ongoing",
-        suppressionLevel: 7,
-        rebound: true,
-      },
-      pain: { throat: 8, jaw: 7, muscle: 7, stomach: 7 },
-      school: {
-        attended: true,
-        suppressionLevel: 8,
-        reboundSeverity: 9,
-        notes: "Still very difficult",
-      },
-      mood: { overall: 4, energy: 3, anxiety: 8, irritability: 7 },
-      notes:
-        "Increased medication to 4mg, waiting to see if helps. Botox referral being discussed.",
-    },
-  ];
-
+    ],
+    []
+  );
   // Past historical data (July 2023 - April 2025)
   const pastHistoricalData = [
     {
