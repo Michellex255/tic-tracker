@@ -712,58 +712,56 @@ export default function App() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Calendar className="w-8 h-8 text-purple-600" />
-              <h1 className="text-3xl font-bold text-gray-800">Tic Tracker</h1>
-            </div>
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => {
-                  setShowForm(true);
-                  setEditingId(null);
-                  resetForm();
-                }}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                <Plus className="w-5 h-5" />
-                New Entry
-              </button>
-              {!historyLoaded && (
-                <button
-                  onClick={loadPastHistory}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm"
-                >
-                  <History className="w-4 h-4" />
-                  Load Past History
-                </button>
-              )}
-            </div>
+        <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Calendar className="w-6 h-6 text-purple-600" />
+            <h1 className="text-2xl font-bold text-gray-800">Tic Tracker</h1>
           </div>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-sm mb-3">
             Track symptoms for Kay-Lee's Tourette's Syndrome
           </p>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => {
+                setShowForm(true);
+                setEditingId(null);
+                resetForm();
+              }}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              New Entry
+            </button>
+            {!historyLoaded && (
+              <button
+                onClick={loadPastHistory}
+                className="flex items-center justify-center gap-2 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm"
+              >
+                <History className="w-4 h-4" />
+                Load Past History
+              </button>
+            )}
+          </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-2 mt-4">
+          <div className="flex flex-wrap gap-2 mt-3">
             <button
               onClick={exportToGoogleSheets}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+              className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
             >
               <FileSpreadsheet className="w-4 h-4" />
               Export to Google Sheets
             </button>
             <button
               onClick={exportForDoctors}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+              className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
             >
               <Download className="w-4 h-4" />
-              Export Report (for doctors)
+              Export Report
             </button>
             <button
               onClick={exportData}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+              className="flex items-center gap-1 px-3 py-1.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
             >
               <Download className="w-4 h-4" />
               Backup Data
