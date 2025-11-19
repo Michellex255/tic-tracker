@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import NotificationSettings from "./NotificationSettings";
 import {
   Calendar,
   Plus,
@@ -720,6 +721,7 @@ export default function App() {
           <p className="text-gray-600 text-sm mb-3">
             Track symptoms for Kay-Lee's Tourette's Syndrome
           </p>
+          <NotificationSettings />
           <div className="flex flex-col gap-2">
             <button
               onClick={() => {
