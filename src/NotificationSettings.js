@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 function NotificationSettings() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false); // NEW - control expand/collapse
   const [reminderTimes, setReminderTimes] = useState([
     { time: "09:00", enabled: true, label: "Morning" },
     { time: "13:00", enabled: true, label: "Afternoon" },
@@ -9,36 +10,28 @@ function NotificationSettings() {
     { time: "21:00", enabled: true, label: "Before Bed" },
   ]);
 
-  // Check if notifications are supported
   const isNotificationSupported =
     "Notification" in window && "serviceWorker" in navigator;
 
-  // Request notification permission
   const enableNotifications = async () => {
     if (!isNotificationSupported) {
-      alert("Notifications are not supported in this browser");
+      alert(
+        "Notifications are not supported in this browser. Try using Chrome or Safari!"
+      );
       return;
     }
 
     try {
-      // Request permission
       const permission = await Notification.requestPermission();
 
       if (permission === "granted") {
-        // Register service worker
-        const registration = await navigator.serviceWorker.register(
-          "/service-worker.js"
-        );
-
         setNotificationsEnabled(true);
-
-        // Schedule notifications
+        setIsExpanded(true); // Expand after enabling
         scheduleNotifications();
 
-        // Show success message
-        new Notification("Tic Tracker Notifications Enabled!", {
-          body: "You will receive reminders to log symptoms",
-          icon: "/icon-192x192.png",
+        new Notification("Tic Tracker Notifications Enabled! 🎉", {
+          body: "Kay-Lee will receive reminders to log symptoms",
+          icon: "/logo192.png",
         });
       } else {
         alert("Please enable notifications in your browser settings");
@@ -49,8 +42,14 @@ function NotificationSettings() {
     }
   };
 
-  // Schedule notifications based on reminder times
   const scheduleNotifications = () => {
+    const existingTimers = JSON.parse(
+      localStorage.getItem("notificationTimers") || "[]"
+    );
+    existingTimers.forEach((timer) => clearTimeout(timer));
+
+    const newTimers = [];
+
     reminderTimes.forEach((reminder) => {
       if (!reminder.enabled) return;
 
@@ -59,33 +58,32 @@ function NotificationSettings() {
       const scheduledTime = new Date();
       scheduledTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
-      // If time has passed today, schedule for tomorrow
       if (scheduledTime <= now) {
         scheduledTime.setDate(scheduledTime.getDate() + 1);
       }
 
       const timeUntilNotification = scheduledTime - now;
 
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         if (Notification.permission === "granted") {
-          new Notification(`Time to Log - ${reminder.label}`, {
+          new Notification(`Time to Log - ${reminder.label} ⏰`, {
             body: "How are Kay-Lee's symptoms today?",
-            icon: "/icon-192x192.png",
+            icon: "/logo192.png",
             tag: reminder.label,
             requireInteraction: true,
           });
 
-          // Schedule for same time tomorrow
           scheduleNotifications();
         }
       }, timeUntilNotification);
+
+      newTimers.push(timer);
     });
 
-    // Save schedule to localStorage
+    localStorage.setItem("notificationTimers", JSON.stringify(newTimers));
     localStorage.setItem("reminderTimes", JSON.stringify(reminderTimes));
   };
 
-  // Toggle individual reminder
   const toggleReminder = (index) => {
     const newTimes = [...reminderTimes];
     newTimes[index].enabled = !newTimes[index].enabled;
@@ -96,7 +94,6 @@ function NotificationSettings() {
     }
   };
 
-  // Update reminder time
   const updateReminderTime = (index, newTime) => {
     const newTimes = [...reminderTimes];
     newTimes[index].time = newTime;
@@ -107,7 +104,12 @@ function NotificationSettings() {
     }
   };
 
-  // Load saved settings on mount
+  const handleSaveAndCollapse = () => {
+    scheduleNotifications();
+    setIsExpanded(false); // Collapse after saving
+    alert("Reminders saved! ✅");
+  };
+
   useEffect(() => {
     const savedTimes = localStorage.getItem("reminderTimes");
     if (savedTimes) {
@@ -121,64 +123,111 @@ function NotificationSettings() {
   }, []);
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-      <h2 className="text-2xl font-bold mb-4">📱 Notification Settings</h2>
+    <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+      {/* Header - Always visible */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold">🔔 Daily Reminders</h2>
+          {notificationsEnabled && !isExpanded && (
+            <p className="text-sm text-green-600 mt-1">
+              ✓ Notifications active
+            </p>
+          )}
+        </div>
+        {notificationsEnabled && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-2xl text-gray-600 hover:text-gray-800"
+          >
+            {isExpanded ? "▼" : "▶"}
+          </button>
+        )}
+      </div>
 
-      {!isNotificationSupported ? (
-        <p className="text-red-600">
-          Notifications are not supported in this browser
-        </p>
-      ) : (
-        <>
-          {!notificationsEnabled ? (
-            <div>
-              <p className="mb-4">
-                Enable daily reminders to log Kay-Lee's symptoms
+      {/* Content - Collapsible */}
+      {(!notificationsEnabled || isExpanded) && (
+        <div className="mt-4">
+          {!isNotificationSupported ? (
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded">
+              <p className="text-yellow-800">
+                ⚠️ Notifications are not supported in this browser. Please use
+                Chrome, Safari, or Edge.
               </p>
-              <button
-                onClick={enableNotifications}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-              >
-                Enable Notifications
-              </button>
             </div>
           ) : (
-            <div>
-              <p className="text-green-600 mb-4">✓ Notifications Enabled</p>
-
-              <h3 className="font-bold mb-2">Daily Reminders:</h3>
-
-              {reminderTimes.map((reminder, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 mb-3 p-3 bg-gray-50 rounded"
-                >
-                  <input
-                    type="checkbox"
-                    checked={reminder.enabled}
-                    onChange={() => toggleReminder(index)}
-                    className="w-5 h-5"
-                  />
-                  <span className="font-medium w-24">{reminder.label}:</span>
-                  <input
-                    type="time"
-                    value={reminder.time}
-                    onChange={(e) => updateReminderTime(index, e.target.value)}
-                    disabled={!reminder.enabled}
-                    className="border rounded px-2 py-1"
-                  />
+            <>
+              {!notificationsEnabled ? (
+                <div>
+                  <p className="mb-4 text-gray-600">
+                    Get reminders throughout the day to log Kay-Lee's symptoms.
+                    Never forget to track!
+                  </p>
+                  <button
+                    onClick={enableNotifications}
+                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-bold"
+                  >
+                    🔔 Enable Daily Reminders
+                  </button>
                 </div>
-              ))}
+              ) : (
+                <div>
+                  <div className="bg-green-100 border-l-4 border-green-500 p-4 rounded mb-4">
+                    <p className="text-green-800 font-semibold">
+                      ✅ Reminders Enabled! Kay-Lee will get notifications at:
+                    </p>
+                  </div>
 
-              <button
-                onClick={scheduleNotifications}
-                className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-              >
-                Save & Reschedule
-              </button>
-            </div>
+                  <h3 className="font-bold mb-3 text-lg">
+                    ⏰ Reminder Schedule:
+                  </h3>
+
+                  {reminderTimes.map((reminder, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-4 mb-3 p-3 bg-gray-50 rounded-lg"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={reminder.enabled}
+                        onChange={() => toggleReminder(index)}
+                        className="w-5 h-5 cursor-pointer"
+                      />
+                      <span className="font-medium w-32">
+                        {reminder.label}:
+                      </span>
+                      <input
+                        type="time"
+                        value={reminder.time}
+                        onChange={(e) =>
+                          updateReminderTime(index, e.target.value)
+                        }
+                        disabled={!reminder.enabled}
+                        className="border rounded px-3 py-2 disabled:bg-gray-200 disabled:cursor-not-allowed"
+                      />
+                      {reminder.enabled && (
+                        <span className="text-green-600 text-sm">✓ Active</span>
+                      )}
+                    </div>
+                  ))}
+
+                  <button
+                    onClick={handleSaveAndCollapse}
+                    className="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-bold"
+                  >
+                    💾 Save & Close
+                  </button>
+
+                  <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-gray-600">
+                      💡 <strong>Tip:</strong> For reminders to work on your
+                      phone, add this app to your home screen!
+                    </p>
+                  </div>
+                </div>
+              )}
+            </>
           )}
-        </>
+        </div>
       )}
     </div>
   );
